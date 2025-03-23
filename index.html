@@ -1,0 +1,1085 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Serttel - Sistema de Notificações de Infrações</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <style>
+    /* Reset e estilos base */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: #fff;
+      color: #333;
+      line-height: 1.5;
+    }
+    
+    /* Layout */
+    .container {
+      max-width: 1024px;
+      margin: 0 auto;
+      padding: 1rem;
+    }
+    
+    /* Header */
+    .header {
+      background-color: #fff;
+      padding: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    
+    .header-logo {
+      display: flex;
+      align-items: center;
+    }
+    
+    .logo-icon {
+      width: 40px;
+      height: 40px;
+      position: relative;
+      margin-right: 8px;
+    }
+    
+    .logo-line1, .logo-line2 {
+      position: absolute;
+      width: 32px;
+      height: 16px;
+      background-color: #3D9970;
+      border-radius: 16px;
+    }
+    
+    .logo-line1 {
+      top: 4px;
+      left: 4px;
+      transform: rotate(-45deg);
+    }
+    
+    .logo-line2 {
+      top: 12px;
+      left: 4px;
+      transform: rotate(45deg);
+    }
+    
+    .logo-text {
+      font-size: 1.5rem;
+      font-weight: 400;
+      color: #666;
+    }
+    
+    .header-subtitle {
+      font-size: 0.75rem;
+      color: #666;
+      line-height: 1.2;
+    }
+    
+    /* Title bar */
+    .title-bar {
+      background-color: #f2f2f2;
+      padding: 1rem;
+      border-bottom: 1px solid #ddd;
+      text-align: center;
+    }
+    
+    .title-bar h2 {
+      font-weight: 400;
+      color: #555;
+      font-size: 1.25rem;
+    }
+    
+    /* Main content */
+    .main-title {
+      font-size: 1.5rem;
+      font-weight: 400;
+      color: #555;
+      margin-bottom: 1.5rem;
+    }
+    
+    /* Alert */
+    .alert {
+      background-color: #f8f9fa;
+      padding: 0.75rem;
+      border-left: 4px solid #3D9970;
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 1.5rem;
+      border-radius: 4px;
+    }
+    
+    .alert-icon {
+      margin-right: 0.5rem;
+      color: #3D9970;
+      flex-shrink: 0;
+    }
+    
+    .alert-content {
+      font-size: 0.875rem;
+    }
+    
+    .alert-title {
+      font-weight: 500;
+      color: #333;
+    }
+    
+    .alert-message {
+      color: #555;
+    }
+    
+    /* Card */
+    .card {
+      background-color: #fff;
+      border-radius: 6px;
+      overflow: hidden;
+      border: 1px solid #ddd;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      margin-bottom: 1.5rem;
+    }
+    
+    .card-header {
+      width: 100%;
+      padding: 0.75rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #3D9970;
+      color: white;
+      border: none;
+      text-align: left;
+      cursor: pointer;
+    }
+    
+    .card-header h3 {
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+    
+    .card-content {
+      padding: 1rem;
+    }
+    
+    /* Grid */
+    .grid {
+      display: grid;
+      gap: 1rem;
+    }
+    
+    .grid-cols-2 {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .grid-cols-3 {
+      grid-template-columns: repeat(3, 1fr);
+    }
+    
+    /* Info box */
+    .info-box {
+      background-color: #f8f9fa;
+      padding: 0.75rem;
+      border-radius: 4px;
+      border: 1px solid #ddd;
+    }
+    
+    .info-label {
+      font-size: 0.75rem;
+      color: #777;
+    }
+    
+    .info-value {
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+    
+    /* Payment section */
+    .payment-section {
+      background-color: #f8f9fa;
+      padding: 1rem;
+      border-top: 1px solid #ddd;
+      margin-bottom: 5rem;
+    }
+    
+    .payment-card {
+      background-color: #fff;
+      padding: 1rem;
+      border-radius: 6px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      border: 1px solid #ddd;
+    }
+    
+    .payment-title {
+      font-size: 1.125rem;
+      font-weight: 400;
+      color: #555;
+      margin-bottom: 1rem;
+    }
+    
+    .payment-details {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 1rem;
+    }
+    
+    @media (min-width: 768px) {
+      .payment-details {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+      }
+    }
+    
+    .payment-item {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.875rem;
+      color: #555;
+    }
+    
+    .payment-total {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: #333;
+      margin-top: 0.5rem;
+      padding-top: 0.5rem;
+      border-top: 1px solid #ddd;
+    }
+    
+    .payment-code {
+      margin-bottom: 1rem;
+    }
+    
+    .code-label {
+      font-size: 0.75rem;
+      color: #777;
+      margin-bottom: 0.25rem;
+    }
+    
+    .code-container {
+      display: flex;
+      align-items: center;
+      background-color: #f8f9fa;
+      padding: 0.5rem;
+      border-radius: 4px;
+      border: 1px solid #ddd;
+    }
+    
+    .code-text {
+      flex: 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-family: monospace;
+      font-size: 0.75rem;
+      color: #555;
+    }
+    
+    .code-copy {
+      margin-left: 0.25rem;
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: none;
+      border: none;
+      color: #777;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+    
+    .code-copy:hover {
+      background-color: #eee;
+      color: #333;
+    }
+    
+    .qr-container {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 0.75rem;
+    }
+    
+    .qr-box {
+      background-color: #f8f9fa;
+      padding: 0.75rem;
+      border-radius: 6px;
+      border: 1px solid #ddd;
+    }
+    
+    .qr-image {
+      width: 128px;
+      height: 128px;
+      background-color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .qr-caption {
+      font-size: 0.75rem;
+      text-align: center;
+      color: #555;
+    }
+    
+    /* Floating payment bar */
+    .payment-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background-color: #fff;
+      padding: 0.75rem;
+      border-top: 1px solid #ddd;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 20;
+      box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
+    }
+    
+    .payment-bar-label {
+      font-size: 0.75rem;
+      color: #777;
+    }
+    
+    .payment-bar-value {
+      font-size: 1rem;
+      font-weight: 500;
+      color: #333;
+    }
+    
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      height: 40px;
+      padding: 0 1.5rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      border-radius: 4px;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+    
+    .btn-primary {
+      background-color: #3D9970;
+      color: #fff;
+    }
+    
+    .btn-primary:hover {
+      background-color: #2d8057;
+    }
+    
+    /* Infraction list */
+    .infraction-list {
+      display: grid;
+      gap: 1rem;
+    }
+    
+    @media (min-width: 768px) {
+      .infraction-list {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    
+    @media (min-width: 1024px) {
+      .infraction-list {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+    
+    .infraction-item {
+      display: block;
+      background-color: #fff;
+      padding: 1rem;
+      border-radius: 6px;
+      border: 1px solid #ddd;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      text-decoration: none;
+      color: inherit;
+      transition: box-shadow 0.2s;
+    }
+    
+    .infraction-item:hover {
+      box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+    }
+    
+    .infraction-id {
+      font-weight: 500;
+      color: #3D9970;
+      margin-bottom: 0.5rem;
+    }
+    
+    .infraction-detail {
+      font-size: 0.875rem;
+      margin-bottom: 0.25rem;
+    }
+    
+    .infraction-detail-label {
+      color: #777;
+    }
+    
+    .infraction-total {
+      font-size: 0.875rem;
+      font-weight: 500;
+      text-align: right;
+      margin-top: 0.5rem;
+    }
+    
+    /* Loading */
+    .loading {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .loading-spinner {
+      width: 64px;
+      height: 64px;
+      border: 4px solid #3D9970;
+      border-top-color: transparent;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-bottom: 1rem;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    .loading-text {
+      color: #555;
+    }
+    
+    /* Error */
+    .error {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .error-box {
+      text-align: center;
+      padding: 1.5rem;
+      background-color: #fee;
+      border-radius: 8px;
+    }
+    
+    .error-icon {
+      color: #e53;
+      width: 48px;
+      height: 48px;
+      margin: 0 auto 1rem;
+    }
+    
+    .error-title {
+      font-size: 1.25rem;
+      font-weight: 500;
+      color: #c43;
+      margin-bottom: 0.5rem;
+    }
+    
+    .error-message {
+      color: #e53;
+    }
+    
+    /* Utilities */
+    .mb-1 { margin-bottom: 0.25rem; }
+    .mb-2 { margin-bottom: 0.5rem; }
+    .mb-3 { margin-bottom: 0.75rem; }
+    .mb-4 { margin-bottom: 1rem; }
+    .mb-6 { margin-bottom: 1.5rem; }
+    .mt-1 { margin-top: 0.25rem; }
+    .mt-2 { margin-top: 0.5rem; }
+    .mt-4 { margin-top: 1rem; }
+    .ml-1 { margin-left: 0.25rem; }
+    .ml-2 { margin-left: 0.5rem; }
+    .ml-4 { margin-left: 1rem; }
+    
+    .hidden { display: none; }
+    
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .header-subtitle {
+        display: none;
+      }
+      
+      .grid-cols-2, .grid-cols-3 {
+        grid-template-columns: 1fr;
+      }
+      
+      .header-subtitle.mobile-hidden {
+        display: none;
+      }
+    }
+    
+    @media (min-width: 769px) {
+      .header-subtitle.mobile-hidden {
+        display: block;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <!-- Conteúdo será carregado dinamicamente via JavaScript -->
+  </div>
+
+  <script>
+    // Variável global que armazenará os registros
+    let infractions = [];
+
+    // Função para extrair apenas o nome do condutor, removendo "CPF/CNPJ", "Documento", etc.
+    function parseOwner(raw) {
+      if (!raw) return 'Não informado';
+      // Remove tudo após " CPF/CNPJ" ou " Documento"
+      let cleaned = raw;
+      // Ex.: "4992525000148 CIA ITAULEASING DE ARREND MERC, CPF/CNPJ: 4992525000148, Documento: JURIDICA"
+      // Queremos só "4992525000148 CIA ITAULEASING DE ARREND MERC"
+      const patterns = [/cpf\/cnpj/i, /documento/i];
+      for (const p of patterns) {
+        const idx = cleaned.search(p);
+        if (idx > -1) {
+          cleaned = cleaned.slice(0, idx).trim().replace(/[\s,;:]+$/, '');
+        }
+      }
+      return cleaned.trim();
+    }
+
+    // Função para extrair apenas o modelo do carro (removendo "Marca/Modelo:" e tudo após a primeira vírgula)
+    function parseModel(raw) {
+      if (!raw) return 'Não informado';
+      // Remove "Marca/Modelo:"
+      let tmp = raw.replace(/^Marca\/Modelo:\s*/i, '').trim();
+      // Corta na primeira vírgula (ex.: "FORD/VERONA GLX, Ano: 1991..." => "FORD/VERONA GLX")
+      const idx = tmp.indexOf(',');
+      if (idx > -1) {
+        tmp = tmp.slice(0, idx).trim();
+      }
+      return tmp;
+    }
+
+    // Formata a placa para inserir hífen após 3 caracteres (ex.: "BPT9326" => "BPT-9326")
+    function formatPlate(raw) {
+      if (!raw) return 'N/A';
+      const clean = raw.replace(/[^A-Za-z0-9]/g, '').toUpperCase();
+      if (clean.length === 7) {
+        return clean.slice(0,3) + '-' + clean.slice(3);
+      }
+      return clean;
+    }
+
+    // Extrai a hora (ex.: "14h20min" => "14:20:00") do final de endereco_horario
+    function parseHourFromLocal(local) {
+      if (!local) return '00:00:00';
+      // Procura padrão "(\d{1,2}h\d{1,2}min)"
+      const match = local.match(/(\d{1,2})h(\d{1,2})min/i);
+      if (match) {
+        const hh = match[1].padStart(2, '0');
+        const mm = match[2].padStart(2, '0');
+        return `${hh}:${mm}:00`;
+      }
+      return '00:00:00';
+    }
+
+    // Retorna data atual em dd/mm/yyyy
+    function getCurrentDate() {
+      const d = new Date();
+      const day = String(d.getDate()).padStart(2, '0');
+      const month = String(d.getMonth() + 1).padStart(2, '0');
+      const year = d.getFullYear();
+      return `${day}/${month}/${year}`;
+    }
+
+    // Busca dados do servidor
+    async function fetchInfractions() {
+      try {
+        const response = await fetch('/api/infractions');
+        if (!response.ok) {
+          throw new Error('Erro HTTP: ' + response.status);
+        }
+        const data = await response.json();
+        console.log('Dados recebidos:', data);
+
+        infractions = data.map(row => {
+          // IPVA = debitos_restricoes
+          // Multas anteriores = total
+          // Soma => totalDebts
+          const ipvaVal = parseFloat(row.debitos_restricoes) || 0;
+          const finesVal = parseFloat(row.total) || 0;
+          const sumVal = ipvaVal + finesVal;
+
+          const rawOwner = parseOwner(row.proprietario);
+          const rawModel = parseModel(row.veiculo);
+          const hour = parseHourFromLocal(row.endereco_horario);
+
+          return {
+            // Usamos a placa como ID, mas formatada
+            id: formatPlate(row.placa),
+            vehicleInfo: {
+              plate: formatPlate(row.placa),
+              model: rawModel,
+              owner: rawOwner,
+              location: row.endereco_horario || 'Não informado'
+            },
+            debtInfo: {
+              ipva: ipvaVal,
+              previousFines: finesVal,
+              total: sumVal
+            },
+            // Detalhes fixos solicitados
+            infractionDetail: {
+              description: "Estacionamento irregular na Zona Azul de São Paulo",
+              points: 5,
+              // Data atual e hora extraída do local
+              date: getCurrentDate(),
+              time: hour,
+              issueDate: getCurrentDate()
+            },
+            // Não há valor de multa e pix no banco, então 0 / vazio
+            paymentInfo: {
+              fine: 0,
+              pixCode: ''
+            },
+            imageUrl: 'https://via.placeholder.com/800x600.png?text=Sem+Imagem'
+          };
+        });
+
+      } catch (err) {
+        console.error('Erro ao buscar dados:', err);
+        infractions = [];
+      }
+    }
+
+    // Formata valores monetários
+    function formatCurrency(value) {
+      const val = parseFloat(value) || 0;
+      return val.toFixed(2).replace('.', ',');
+    }
+
+    // Copiar texto (se precisar)
+    function copyToClipboard(text) {
+      navigator.clipboard.writeText(text)
+        .then(() => {
+          alert('Código PIX copiado para a área de transferência');
+        })
+        .catch(err => {
+          console.error('Erro ao copiar: ', err);
+        });
+    }
+
+    // Cabeçalho
+    function renderHeader() {
+      return `
+        <div class="header">
+          <div class="header-logo">
+            <div class="logo-icon">
+              <div class="logo-line1"></div>
+              <div class="logo-line2"></div>
+            </div>
+            <h1 class="logo-text">Serttel</h1>
+            <div class="header-subtitle mobile-hidden ml-4">
+              Sistema Integrado de<br>
+              Gestão de Trânsito
+            </div>
+          </div>
+        </div>
+        <div class="title-bar">
+          <h2>Sistema de Notificações de Infrações</h2>
+        </div>
+      `;
+    }
+
+    // Lista de infrações
+    function renderInfractionList() {
+      const cards = infractions.map(infraction => {
+        const totalAmount = infraction.debtInfo.total + infraction.paymentInfo.fine;
+        return `
+          <a href="#infraction-${infraction.id}" class="infraction-item" onclick="showInfractionDetail('${infraction.id}')">
+            <div class="infraction-id">${infraction.id}</div>
+            <div class="infraction-detail">
+              <span class="infraction-detail-label">Placa:</span> ${infraction.vehicleInfo.plate}
+            </div>
+            <div class="infraction-detail">
+              <span class="infraction-detail-label">Proprietário:</span> ${infraction.vehicleInfo.owner}
+            </div>
+            <div class="infraction-detail">
+              <span class="infraction-detail-label">Data:</span> ${infraction.infractionDetail.date}
+            </div>
+            <div class="infraction-total">
+              Total: R$ ${formatCurrency(totalAmount)}
+            </div>
+          </a>
+        `;
+      }).join('');
+
+      return `
+        <div class="container">
+          <h1 class="main-title">Notificações de Autuação</h1>
+          <div class="infraction-list">
+            ${cards}
+          </div>
+        </div>
+      `;
+    }
+
+    // Detalhes
+    function renderInfractionDetail(id) {
+      const infraction = infractions.find(i => i.id === id);
+      if (!infraction) {
+        return `
+          <div class="error">
+            <div class="error-box">
+              <svg class="error-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                   fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                   stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="8" x2="12" y2="12"></line>
+                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+              </svg>
+              <h2 class="error-title">Erro</h2>
+              <p class="error-message">Infração não encontrada</p>
+            </div>
+          </div>
+        `;
+      }
+
+      const totalAmount = infraction.debtInfo.total + infraction.paymentInfo.fine;
+
+      return `
+        <div class="container">
+          <h1 class="main-title">
+            Notificação de Autuação de Infração de Trânsito
+            <span class="ml-2" style="font-size: 0.875rem; color: #3D9970;">#${infraction.id}</span>
+          </h1>
+
+          <!-- Alert -->
+          <div class="alert">
+            <svg class="alert-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                 stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="8" x2="12" y2="12"></line>
+              <line x1="12" y1="16" x2="12.01" y2="16"></line>
+            </svg>
+            <div class="alert-content">
+              <p class="alert-title">Atenção</p>
+              <p class="alert-message">
+                Esta notificação deve ser paga até o vencimento para evitar multas e pontos adicionais.
+              </p>
+            </div>
+          </div>
+
+          <!-- Vehicle Information -->
+          <div class="card mb-6">
+            <button class="card-header" onclick="toggleSection('vehicle-info')">
+              <h3>Informações do Veículo</h3>
+              <svg id="vehicle-info-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                   viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                   stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="18 15 12 9 6 15"></polyline>
+              </svg>
+            </button>
+
+            <div id="vehicle-info" class="card-content">
+              <div class="grid grid-cols-2 mb-4">
+                <div class="info-box">
+                  <p class="info-label">Placa</p>
+                  <p class="info-value">${infraction.vehicleInfo.plate}</p>
+                </div>
+                <div class="info-box">
+                  <p class="info-label">Marca/Modelo</p>
+                  <p class="info-value">${infraction.vehicleInfo.model}</p>
+                </div>
+              </div>
+              <div class="info-box mb-4">
+                <p class="info-label">Proprietário</p>
+                <p class="info-value">${infraction.vehicleInfo.owner}</p>
+              </div>
+              <!-- Contatos removido -->
+              <div class="info-box">
+                <p class="info-label">Local</p>
+                <p class="info-value">${infraction.vehicleInfo.location}</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Outstanding Debts -->
+          <div class="card mb-6">
+            <button class="card-header" onclick="toggleSection('debts-info')">
+              <h3>Débitos em Aberto do Veículo</h3>
+              <svg id="debts-info-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                   viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                   stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="18 15 12 9 6 15"></polyline>
+              </svg>
+            </button>
+
+            <div id="debts-info" class="card-content">
+              <div class="info-box">
+                <div style="display: flex; align-items: flex-start; margin-bottom: 1rem;">
+                  <svg style="margin-right: 0.5rem; color: #ff9800; flex-shrink: 0;"
+                       xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                       viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                       stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                    <line x1="12" y1="9" x2="12" y2="13"></line>
+                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                  </svg>
+                  <p style="font-size: 0.875rem; color: #333;">
+                    Para utilizar nosso programa de proteção à CNH, é necessário quitar todos os débitos pendentes do veículo.
+                  </p>
+                </div>
+
+                <div style="margin-top: 1rem; border-top: 1px solid #ddd; padding-top: 1rem;">
+                  <p style="font-size: 0.75rem; color: #777; margin-bottom: 0.75rem;">Detalhamento dos débitos:</p>
+
+                  <div style="background-color: #fff; padding: 0.75rem; border-radius: 4px; border: 1px solid #ddd; margin-bottom: 0.75rem;">
+                    <div style="display: flex; justify-content: space-between;">
+                      <span style="font-size: 0.875rem; color: #333;">IPVA em atraso:</span>
+                      <span style="font-size: 0.875rem; font-weight: 500; color: #333;">
+                        R$ ${formatCurrency(infraction.debtInfo.ipva)}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div style="background-color: #fff; padding: 0.75rem; border-radius: 4px; border: 1px solid #ddd; margin-bottom: 0.75rem;">
+                    <div style="display: flex; justify-content: space-between;">
+                      <span style="font-size: 0.875rem; color: #333;">Multas anteriores:</span>
+                      <span style="font-size: 0.875rem; font-weight: 500; color: #333;">
+                        R$ ${formatCurrency(infraction.debtInfo.previousFines)}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div style="background-color: #fff; padding: 0.75rem; border-radius: 4px; border: 1px solid #ddd;">
+                    <div style="display: flex; justify-content: space-between;">
+                      <span style="font-size: 0.875rem; font-weight: 500; color: #333;">Total de débitos:</span>
+                      <span style="font-size: 0.875rem; font-weight: 700; color: #3D9970;">
+                        R$ ${formatCurrency(infraction.debtInfo.total)}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Infraction Details -->
+          <div class="card mb-6">
+            <button class="card-header" onclick="toggleSection('infraction-details')">
+              <h3>Detalhes da Infração</h3>
+              <svg id="infraction-details-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                   viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                   stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="18 15 12 9 6 15"></polyline>
+              </svg>
+            </button>
+
+            <div id="infraction-details" class="card-content">
+              <div class="info-box mb-4">
+                <p class="info-label">Infração</p>
+                <p class="info-value">Estacionamento irregular na Zona Azul de São Paulo</p>
+                <p class="info-label mt-1">
+                  5 pontos na CNH | Veículo sujeito à remoção
+                </p>
+              </div>
+
+              <div class="grid grid-cols-3">
+                <div class="info-box">
+                  <p class="info-label">Data</p>
+                  <p class="info-value">${infraction.infractionDetail.date}</p>
+                </div>
+                <div class="info-box">
+                  <p class="info-label">Hora</p>
+                  <p class="info-value">${infraction.infractionDetail.time}</p>
+                </div>
+                <div class="info-box">
+                  <p class="info-label">Emissão</p>
+                  <p class="info-value">${infraction.infractionDetail.issueDate}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Violation Image -->
+          <div class="card mb-6">
+            <button class="card-header" onclick="toggleSection('infraction-image')">
+              <h3>Imagem da Infração</h3>
+              <svg id="infraction-image-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                   viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                   stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="18 15 12 9 6 15"></polyline>
+              </svg>
+            </button>
+
+            <div id="infraction-image" class="card-content">
+              <div class="info-box">
+                <div style="width: 100%; height: 200px; background-color: #eee; border-radius: 4px; overflow: hidden; position: relative;">
+                  <img src="${infraction.imageUrl}" alt="Imagem da infração"
+                       style="width: 100%; height: 100%; object-fit: cover;">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Payment Information -->
+        <div class="payment-section">
+          <div class="container">
+            <div class="payment-card">
+              <h3 class="payment-title">Informações de Pagamento</h3>
+
+              <div class="payment-details">
+                <div>
+                  <p class="info-label">Detalhamento</p>
+                  <div class="mt-2">
+                    <div class="payment-item">
+                      <span style="margin-right: 2rem;">Multa:</span>
+                      <span>R$ ${formatCurrency(infraction.paymentInfo.fine)}</span>
+                    </div>
+                    <div class="payment-item">
+                      <span style="margin-right: 2rem;">Débitos em aberto:</span>
+                      <span>R$ ${formatCurrency(infraction.debtInfo.total)}</span>
+                    </div>
+                    <div class="payment-total">
+                      <span style="margin-right: 2rem;">Total:</span>
+                      <span>R$ ${formatCurrency(totalAmount)}</span>
+                    </div>
+                  </div>
+                </div>
+                <button class="btn btn-primary mt-4" style="margin-top: 1rem;">
+                  Pagar Agora
+                </button>
+              </div>
+
+              <div class="payment-code">
+                <p class="code-label">Código de Pagamento</p>
+                <div class="code-container">
+                  <div class="code-text">
+                    ${infraction.paymentInfo.pixCode}
+                  </div>
+                  <button 
+                    class="code-copy"
+                    onclick="copyToClipboard('${infraction.paymentInfo.pixCode}')"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12"
+                         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                         stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                      <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+
+              <div class="qr-container">
+                <div class="qr-box">
+                  <div class="qr-image">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64"
+                         viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                         stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                      <rect x="7" y="7" width="3" height="3"></rect>
+                      <rect x="14" y="7" width="3" height="3"></rect>
+                      <rect x="7" y="14" width="3" height="3"></rect>
+                      <rect x="14" y="14" width="3" height="3"></rect>
+                    </svg>
+                  </div>
+                </div>
+              </div>
+              <p class="qr-caption">Escaneie o QR Code para pagar via PIX</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Floating Payment Button -->
+        <div class="payment-bar">
+          <div>
+            <p class="payment-bar-label">Total a pagar</p>
+            <p class="payment-bar-value">R$ ${formatCurrency(totalAmount)}</p>
+          </div>
+          <button class="btn btn-primary">Pagar Agora</button>
+        </div>
+      `;
+    }
+
+    // Alterna visibilidade de uma seção
+    function toggleSection(id) {
+      const section = document.getElementById(id);
+      const icon = document.getElementById(`${id}-icon`);
+      if (!section) return;
+      
+      if (section.style.display === 'none') {
+        section.style.display = 'block';
+        if (icon) {
+          icon.innerHTML = '<polyline points="18 15 12 9 6 15"></polyline>';
+        }
+      } else {
+        section.style.display = 'none';
+        if (icon) {
+          icon.innerHTML = '<polyline points="6 9 12 15 18 9"></polyline>';
+        }
+      }
+    }
+
+    // Exibe a lista
+    function showInfractionList() {
+      const appElement = document.getElementById('app');
+      appElement.innerHTML = renderHeader() + renderInfractionList();
+      window.location.hash = '';
+    }
+
+    // Exibe detalhes
+    function showInfractionDetail(id) {
+      const appElement = document.getElementById('app');
+      appElement.innerHTML = renderHeader() + renderInfractionDetail(id);
+      window.location.hash = `infraction-${id}`;
+    }
+
+    // Inicialização
+    async function initApp() {
+      await fetchInfractions();
+      const hash = window.location.hash;
+      if (hash && hash.startsWith('#infraction-')) {
+        const infId = hash.replace('#infraction-', '');
+        showInfractionDetail(infId);
+      } else {
+        showInfractionList();
+      }
+
+      window.addEventListener('hashchange', () => {
+        const newHash = window.location.hash;
+        if (newHash && newHash.startsWith('#infraction-')) {
+          const infId = newHash.replace('#infraction-', '');
+          showInfractionDetail(infId);
+        } else {
+          showInfractionList();
+        }
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', initApp);
+
+    // Expor funções se precisar
+    window.showInfractionList = showInfractionList;
+    window.showInfractionDetail = showInfractionDetail;
+    window.toggleSection = toggleSection;
+    window.copyToClipboard = copyToClipboard;
+  </script>
+</body>
+</html>
